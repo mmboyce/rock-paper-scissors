@@ -6,7 +6,38 @@
 </head>
 
 <body>
+    <input type="button" value="Rock" class="rock"/>
+    <input type="button" value="Paper" class="paper" />
+    <input type="button" value="Scissors" class="scissors" />
+
+    <p class="playerScore">Your Score: 0</p>
+    <p class="computerScore">Computer Score: 0</p>
+    <p class="result"></p>
+
     <script>
+        let rock = document.querySelector('.rock');
+        let paper = document.querySelector('.paper');
+        let scissors = document.querySelector('.scissors');
+
+        let result = document.querySelector('.result');
+        let playerScore = document.querySelector('.playerScore');
+        let computerScore = document.querySelector('.computerScore');
+
+        let playerWins = 0;
+        let computerWins = 0;
+
+        rock.addEventListener('click', () => {
+            playRound('Rock', computerPlay());
+        });
+
+        paper.addEventListener('click', () => {
+            playRound('Paper', computerPlay());
+        });
+
+        scissors.addEventListener('click', () => {
+            playRound('Paper', computerPlay());
+        });
+
         // Inclusive random number function
         function rand(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -17,27 +48,31 @@
 
             switch (pick) {
                 case 0:
-                    return 'rock';
+                    return 'Rock';
                 case 1:
-                    return 'paper';
+                    return 'Paper';
                 default:
-                    return 'scissors'
+                    return 'Scissors'
             }
         }
 
-        function playRound(playerSelection, computerSelection) {
-            playerSelection = playerSelection.toLowerCase();
+        function playRound(playerSelection, computerSelection) {            
+            let winFlag = false;
 
-            if (playerSelection != 'rock' &&
-                playerSelection != 'paper' &&
-                playerSelection != 'scissors') {
+            if (playerSelection == computerSelection) {
+                result.innerHTML = "It's a draw!";
                 return;
             }
 
-            let winFlag = false;
+            const youWin = "You win! ";
+            const youLose = "You lose. ";
 
-            if (playerSelection == 'rock') {
-                if (computerSelection == 'paper') {
+            let winner = '';
+            let loser = '';
+            let gameOver = '';
+
+            if (playerSelection == 'Rock') {
+                if (computerSelection == 'Paper') {
                     winner = computerSelection;
                     loser = playerSelection;
                 }
@@ -47,8 +82,8 @@
                     winFlag = true;
                 }
             }
-            else if (playerSelection == 'paper') {
-                if (computerSelection == 'scissors') {
+            else if (playerSelection == 'Paper') {
+                if (computerSelection == 'Scissors') {
                     winner = computerSelection;
                     loser = playerSelection;
                 }
@@ -59,7 +94,7 @@
                 }
             }
             else {
-                if (computerSelection == 'rock') {
+                if (computerSelection == 'Rock') {
                     winner = computerSelection;
                     loser = playerSelection
                 }
@@ -70,50 +105,19 @@
                 }
             }
 
-            return winFlag;
-        }
+            let beats = winner + " beats " + loser + ".";
 
-        function game(){
-            let playerWins = 0;
-            let computerWins = 0;
-            const draw = 'It\'s a draw!';
-
-            while(computerWins + playerWins < 5){
-                let pick = prompt('Pick one: [Rock, paper, scissors]');
-                let computerPick = computerPlay();
-
-                if (pick === computerPick){
-                    alert(draw);
-                    continue;
-                }
-
-                let result = playRound(pick, computerPick);
-
-                if(result === undefined) {
-                    alert('You must pick either Rock, Paper, or Scissors!');
-                    // loop again
-                }
-                else if(result){
-                    alert("You won that round, " + pick + " beats " + computerPick);
-                    playerWins++;
-                }
-                else{
-                    alert("You lost that round, " + computerPick + " beats " + pick);
-                    computerWins++;
-                }
-            }
-
-            if (playerWins > computerWins){
-                alert("Congrats, you won! Your beat the computer " + playerWins + " to " + computerWins);
+            if(winFlag){
+                playerWins++;
+                playerScore.innerHTML = "Your Score: " + playerWins;
+                result.innerHTML = youWin + beats;
             }
             else{
-                alert("The computer beat you " + computerWins + " to " + playerWins);
+                computerWins++;
+                computerScore.innerHTML = "Computer Score: " + computerWins;
+                result.innerHTML = youLose + beats;
             }
-
-            confirm("Would you like to go again?") ? game() : undefined;
         }
-
-        game();
 
     </script>
 </body>
